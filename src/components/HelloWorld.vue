@@ -1,40 +1,53 @@
-<template>
-  <div class="hello">
-    <h1>{{ msg }}</h1>
-    <p>
-      For a guide and recipes on how to configure / customize this project,<br>
-      check out the
-      <a href="https://cli.vuejs.org" target="_blank" rel="noopener">vue-cli documentation</a>.
-    </p>
-    <h3>Installed CLI Plugins</h3>
-    <ul>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-babel" target="_blank" rel="noopener">babel</a></li>
-      <li><a href="https://github.com/vuejs/vue-cli/tree/dev/packages/%40vue/cli-plugin-router" target="_blank" rel="noopener">router</a></li>
-    </ul>
-    <h3>Essential Links</h3>
-    <ul>
-      <li><a href="https://vuejs.org" target="_blank" rel="noopener">Core Docs</a></li>
-      <li><a href="https://forum.vuejs.org" target="_blank" rel="noopener">Forum</a></li>
-      <li><a href="https://chat.vuejs.org" target="_blank" rel="noopener">Community Chat</a></li>
-      <li><a href="https://twitter.com/vuejs" target="_blank" rel="noopener">Twitter</a></li>
-      <li><a href="https://news.vuejs.org" target="_blank" rel="noopener">News</a></li>
-    </ul>
-    <h3>Ecosystem</h3>
-    <ul>
-      <li><a href="https://router.vuejs.org" target="_blank" rel="noopener">vue-router</a></li>
-      <li><a href="https://vuex.vuejs.org" target="_blank" rel="noopener">vuex</a></li>
-      <li><a href="https://github.com/vuejs/vue-devtools#vue-devtools" target="_blank" rel="noopener">vue-devtools</a></li>
-      <li><a href="https://vue-loader.vuejs.org" target="_blank" rel="noopener">vue-loader</a></li>
-      <li><a href="https://github.com/vuejs/awesome-vue" target="_blank" rel="noopener">awesome-vue</a></li>
-    </ul>
-  </div>
+<template> 
+  <PersonalForm
+    class="PersonalForm"
+    @add-personal-info="addPersonalInfo"
+  />
+  <ChildrenForm
+   v-bind:items="items"
+      @push-new-element="receiveEmit"
+      @delete-element="receieveDeleteEmit"
+      @push-new-child-object="pushNewChildObject"
+    /> 
+  <button class="saveButton" @click="saveBTN">Сохранить</button>   
 </template>
 
 <script>
+
+import PersonalForm from './PersonalForm.vue';
+import ChildrenForm from './ChildrenForm.vue';
+
 export default {
   name: 'HelloWorld',
+  components: {
+    PersonalForm,
+    ChildrenForm
+  },
   props: {
-    msg: String
+    items: []
+  },
+  data () {
+    return {
+      child: [],
+      personalInfo: []
+    }
+  },
+  methods: {
+    receiveEmit () {
+      this.$emit('push-new-element')
+    },
+    receieveDeleteEmit () {
+      this.$emit('delete-element')
+    },    
+    pushNewChildObject (childObject) {
+      this.child.push(childObject)
+    },
+    saveBTN () {
+      this.$emit('push-child-info', this.child, this.personalInfo)
+    },
+    addPersonalInfo (personalInfo) {
+      this.personalInfo.push(personalInfo)
+    }
   }
 }
 </script>
@@ -54,5 +67,20 @@ li {
 }
 a {
   color: #42b983;
+}
+.PersonalForm {
+  margin-top: 30px;
+}
+.saveButton {
+  position: relative;
+  left: 33.5%;
+  top: -20px;
+  width: 118px;
+  height: 44px;
+  border-radius: 30px;
+  color: #fff;
+  background: #01A7FD;
+  border: 0px solid black;
+  cursor: pointer;
 }
 </style>
